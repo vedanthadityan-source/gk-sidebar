@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: transparent;
+    font-family: 'Cinzel', Georgia, serif;
+    color: #e8d48a;
+    padding: 0 18px 14px;
+  }
+  .member {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 11px 0;
+    border-bottom: 1px solid #1a1500;
+  }
+  .member:last-of-type { border-bottom: none; }
+  .index {
+    font-size: 24px;
+    font-weight: 900;
+    color: rgba(212,160,23,0.18);
+    width: 26px;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+  .avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 2px;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 1px solid #3a2e00;
+    filter: sepia(0.2);
+    background: #1a1500;
+  }
+  .info { flex: 1; min-width: 0; }
+  .username {
+    font-size: 12px;
+    font-weight: 700;
+    color: #f5d060;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+    text-decoration: none;
+    display: block;
+  }
+  .username:hover { color: #fff; }
+  .joined {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 11px;
+    color: #5a4010;
+    font-style: italic;
+  }
+  .badge {
+    font-size: 7px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    background: #d4a017;
+    color: #080600;
+    padding: 3px 7px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .loading {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 12px;
+    color: #5a4010;
+    font-style: italic;
+    padding: 14px 0;
+  }
+  .error {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 11px;
+    color: #7a3010;
+    font-style: italic;
+    padding: 10px 0;
+  }
+  /* skeleton pulse while loading */
+  .skeleton {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 11px 0;
+    border-bottom: 1px solid #1a1500;
+  }
+  .skel-box {
+    background: #1a1500;
+    border-radius: 2px;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50%       { opacity: 0.9; }
+  }
+</style>
+</head>
+<body>
+
+<div id="root">
+  <!-- skeleton loaders -->
+  <div class="skeleton">
+    <div class="skel-box" style="width:26px;height:24px;"></div>
+    <div class="skel-box" style="width:44px;height:44px;"></div>
+    <div style="flex:1;">
+      <div class="skel-box" style="width:70%;height:12px;margin-bottom:6px;"></div>
+      <div class="skel-box" style="width:45%;height:10px;"></div>
+    </div>
+    <div class="skel-box" style="width:32px;height:20px;"></div>
+  </div>
+  <div class="skeleton">
+    <div class="skel-box" style="width:26px;height:24px;"></div>
+    <div class="skel-box" style="width:44px;height:44px;"></div>
+    <div style="flex:1;">
+      <div class="skel-box" style="width:60%;height:12px;margin-bottom:6px;"></div>
+      <div class="skel-box" style="width:40%;height:10px;"></div>
+    </div>
+    <div class="skel-box" style="width:32px;height:20px;"></div>
+  </div>
+</div>
+
+<script>
+  // Chess.com API — club members endpoint
+  // Returns { weekly: [...], monthly: [...], all_time: [...] }
+  // Each entry: { username, joined (unix timestamp) }
+  // We combine all, deduplicate, sort by joined desc, take top 2
+  // Then fetch each player profile for their avatar
+
+  const CLUB = 'the-gold-knights';
+  const PROXY = 'https://corsproxy.io/?url=';
+  const FALLBACK_AVATAR = 'https://www.chess.com/bundles/web/images/user-image.007dad08.svg';
+
+  function formatDate(timestamp) {
+    const d = new Date(timestamp * 1000);
+    return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  }
+
+  async function fetchJSON(url) {
+    const res = await fetch(PROXY + encodeURIComponent(url), {
+      headers: { 'User-Agent': 'GoldKnightsSidebar/1.0' }
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.json();
+  }
+
+  async function getAvatar(username) {
+    try {
+      const data = await fetchJSON(`https://api.chess.com/pub/player/${username}`);
+      return data.avatar || FALLBACK_AVATAR;
+    } catch {
+      return FALLBACK_AVATAR;
+    }
+  }
+
+  async function render() {
+    const root = document.getElementById('root');
+    try {
+      // 1. Fetch all members
+      const data = await fetchJSON(`https://api.chess.com/pub/club/${CLUB}/members`);
+
+      // 2. Combine all groups, deduplicate by username, keep highest joined
+      const map = new Map();
+      [...(data.weekly || []), ...(data.monthly || []), ...(data.all_time || [])].forEach(m => {
+        if (!map.has(m.username) || m.joined > map.get(m.username).joined) {
+          map.set(m.username, m);
+        }
+      });
+
+      // 3. Sort by joined descending, take top 2
+      const newest = [...map.values()]
+        .sort((a, b) => b.joined - a.joined)
+        .slice(0, 2);
+
+      // 4. Fetch avatars in parallel
+      const avatars = await Promise.all(newest.map(m => getAvatar(m.username)));
+
+      // 5. Render
+      root.innerHTML = newest.map((m, i) => `
+        <div class="member">
+          <div class="index">0${i + 1}</div>
+          <img class="avatar"
+            src="${avatars[i]}"
+            onerror="this.src='${FALLBACK_AVATAR}'"
+            alt="${m.username}"/>
+          <div class="info">
+            <a class="username"
+              href="https://www.chess.com/member/${m.username}"
+              target="_blank" rel="noopener">
+              ${m.username}
+            </a>
+            <div class="joined">Joined ${formatDate(m.joined)}</div>
+          </div>
+          <span class="badge">New</span>
+        </div>
+      `).join('');
+
+    } catch (err) {
+      root.innerHTML = `<div class="error">Could not load members — ${err.message}</div>`;
+    }
+  }
+
+  render();
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet"/>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #1a1500;
+    font-family: 'Cinzel', Georgia, serif;
+    overflow: hidden;
+    height: 28px;
+    display: flex;
+    align-items: center;
+  }
+  .wrap {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .ticker {
+    display: inline-block;
+    animation: scroll 32s linear infinite;
+    color: #d4a017;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+  }
+  .sep { color: #3a2e00; margin: 0 22px; }
+  @keyframes scroll {
+    0%   { transform: translateX(100vw); }
+    100% { transform: translateX(-100%); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- EDIT: Update announcement text here -->
+  <span class="ticker">
+    ♞ Welcome to The Gold Knights — Ride with honour, play with glory
+    <span class="sep">·</span>
+    Weekly tournaments — join &amp; compete for the crown
+    <span class="sep">·</span>
+    Invite your friends and build the Golden army
+    <span class="sep">·</span>
+    Contact admins for all tournament info
+    <span class="sep">·</span>
+    Bold tactics · Fearless play · Relentless excellence ♞
+  </span>
+</div>
+</body>
+</html>

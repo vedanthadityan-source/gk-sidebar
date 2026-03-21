@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;900&display=swap" rel="stylesheet"/>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: transparent;
+    font-family: 'Cinzel', Georgia, serif;
+    height: 80px;
+    display: flex;
+    align-items: center;
+  }
+  .wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+  .count {
+    font-size: 52px;
+    font-weight: 900;
+    color: #f5d060;
+    letter-spacing: -3px;
+    line-height: 1;
+    text-shadow: 0 0 32px rgba(245,208,96,0.28);
+  }
+  .label {
+    display: block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #5a4010;
+    margin-bottom: 5px;
+  }
+  .sublabel {
+    display: block;
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #3a2c00;
+    margin-bottom: 6px;
+  }
+  /* Milestone progress bar — mark reached/current below */
+  .milestones {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+  }
+  .milestone {
+    height: 3px;
+    width: 18px;
+    background: #1a1500;
+    border-radius: 1px;
+  }
+  .milestone.reached { background: #d4a017; }
+  .milestone.current { background: linear-gradient(90deg, #d4a017 60%, #1a1500 60%); }
+</style>
+</head>
+<body>
+
+<!-- EDIT: Change the number in .count to the actual member count -->
+<!-- Mark milestones: 10 · 30 · 50 · 100 · 200 · 500 -->
+
+<div class="wrap">
+  <div class="count">50+</div>
+  <div>
+    <span class="label">Knights</span>
+    <span class="sublabel">&amp; Growing ♞</span>
+    <div class="milestones">
+      <div class="milestone reached"></div><!-- 10 -->
+      <div class="milestone reached"></div><!-- 30 -->
+      <div class="milestone current"></div><!-- 50 -->
+      <div class="milestone"></div><!-- 100 -->
+      <div class="milestone"></div><!-- 200 -->
+      <div class="milestone"></div><!-- 500 -->
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

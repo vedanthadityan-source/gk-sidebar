@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Crimson+Text:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: transparent;
+    font-family: 'Cinzel', Georgia, serif;
+  }
+  .box {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    min-height: 72px;
+    padding: 2px 0 6px;
+  }
+  .glyph {
+    font-size: 20px;
+    color: #d4a017;
+    flex-shrink: 0;
+    line-height: 1.3;
+    opacity: 0.8;
+  }
+  .fact {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 13px;
+    color: #c0a050;
+    font-style: italic;
+    line-height: 1.7;
+    transition: opacity 0.5s ease;
+  }
+  .fact strong {
+    font-family: 'Cinzel', Georgia, serif;
+    font-style: normal;
+    font-size: 11px;
+    color: #f5d060;
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="glyph">♞</div>
+  <div class="fact" id="fact"></div>
+</div>
+<script>
+  const facts = [
+    "The <strong>knight</strong> is the only chess piece that can leap over others — a rule-breaker by design.",
+    "The word <strong>checkmate</strong> comes from the Persian <em>shāh māt</em> — meaning 'the king is helpless.'",
+    "There are more possible chess games than <strong>atoms in the observable universe</strong>.",
+    "The first <strong>chess computer program</strong> was written in 1951 by Alan Turing — by hand, on paper.",
+    "Chess originated in <strong>6th century India</strong> as <em>Chaturanga</em> — the four divisions of the military.",
+    "The <strong>queen</strong> only became the most powerful piece in the 15th century. Originally, she moved just one square.",
+    "There are <strong>400 different positions</strong> possible after each player's first two moves.",
+    "The longest official chess game ever played lasted <strong>269 moves</strong> — Nikolic vs. Arsovic, Belgrade, 1989.",
+    "A <strong>pawn</strong> that reaches the last rank can promote to any piece except a king — even a second queen.",
+    "The <strong>Gold Knights</strong> — where every move tells a story, and every victory is golden. ♞",
+  ];
+  let i = Math.floor(Math.random() * facts.length);
+  const el = document.getElementById('fact');
+  el.innerHTML = facts[i];
+  i = (i + 1) % facts.length;
+  setInterval(() => {
+    el.style.opacity = '0';
+    setTimeout(() => {
+      el.innerHTML = facts[i];
+      el.style.opacity = '1';
+      i = (i + 1) % facts.length;
+    }, 500);
+  }, 7000);
+</script>
+</body>
+</html>

@@ -7,70 +7,102 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    background: #0d0b00;
+    background: transparent;
     font-family: 'Cinzel', Georgia, serif;
-  }
-  .box {
+    overflow: hidden;
+    height: 88px;
     display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    min-height: 72px;
-    padding: 2px 0 6px;
+    align-items: center;
   }
-  .glyph {
-    font-size: 20px;
-    color: #d4a017;
-    flex-shrink: 0;
-    line-height: 1.3;
-    opacity: 0.8;
+  .track {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+  .track::before,
+  .track::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 30px;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .track::before {
+    left: 0;
+    background: linear-gradient(90deg, #080600, transparent);
+  }
+  .track::after {
+    right: 0;
+    background: linear-gradient(270deg, #080600, transparent);
+  }
+  .marquee {
+    display: flex;
+    gap: 0;
+    animation: scroll 60s linear infinite;
+    width: max-content;
+  }
+  .marquee:hover { animation-play-state: paused; }
+  @keyframes scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
   }
   .fact {
     font-family: 'Crimson Text', Georgia, serif;
-    font-size: 13px;
+    font-size: 12px;
     color: #c0a050;
     font-style: italic;
-    line-height: 1.7;
-    transition: opacity 0.5s ease;
+    line-height: 1.65;
+    white-space: nowrap;
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .fact .glyph {
+    color: #d4a017;
+    font-style: normal;
+    font-size: 14px;
+    flex-shrink: 0;
   }
   .fact strong {
     font-family: 'Cinzel', Georgia, serif;
     font-style: normal;
-    font-size: 11px;
+    font-size: 10px;
     color: #f5d060;
     letter-spacing: 0.5px;
+  }
+  .sep {
+    color: #3a2e00;
+    margin: 0 20px;
+    font-style: normal;
   }
 </style>
 </head>
 <body>
-<div class="box">
-  <div class="glyph">♞</div>
-  <div class="fact" id="fact"></div>
+<div class="track">
+  <div class="marquee" id="marquee"></div>
 </div>
 <script>
   const facts = [
-    "The <strong>knight</strong> is the only chess piece that can leap over others — a rule-breaker by design.",
-    "The word <strong>checkmate</strong> comes from the Persian <em>shāh māt</em> — meaning 'the king is helpless.'",
+    "The <strong>knight</strong> is the only chess piece that can leap over others — a true rule-breaker.",
+    "The word <strong>checkmate</strong> comes from the Persian <em>shāh māt</em> — 'the king is helpless.'",
     "There are more possible chess games than <strong>atoms in the observable universe</strong>.",
     "The first <strong>chess computer program</strong> was written in 1951 by Alan Turing — by hand, on paper.",
     "Chess originated in <strong>6th century India</strong> as <em>Chaturanga</em> — the four divisions of the military.",
-    "The <strong>queen</strong> only became the most powerful piece in the 15th century. Originally, she moved just one square.",
+    "The <strong>queen</strong> only became the most powerful piece in the 15th century. Originally she moved just one square.",
     "There are <strong>400 different positions</strong> possible after each player's first two moves.",
-    "The longest official chess game ever played lasted <strong>269 moves</strong> — Nikolic vs. Arsovic, Belgrade, 1989.",
-    "A <strong>pawn</strong> that reaches the last rank can promote to any piece except a king — even a second queen.",
+    "The longest official chess game lasted <strong>269 moves</strong> — Nikolic vs. Arsovic, Belgrade, 1989.",
+    "A <strong>pawn</strong> that reaches the last rank can promote to any piece — even a second queen.",
     "The <strong>Gold Knights</strong> — where every move tells a story, and every victory is golden. ♞",
   ];
-  let i = Math.floor(Math.random() * facts.length);
-  const el = document.getElementById('fact');
-  el.innerHTML = facts[i];
-  i = (i + 1) % facts.length;
-  setInterval(() => {
-    el.style.opacity = '0';
-    setTimeout(() => {
-      el.innerHTML = facts[i];
-      el.style.opacity = '1';
-      i = (i + 1) % facts.length;
-    }, 500);
-  }, 7000);
+
+  // Build two copies for seamless looping
+  const marquee = document.getElementById('marquee');
+  const html = facts.map(f =>
+    `<span class="fact"><span class="glyph">♞</span>${f}</span><span class="fact"><span class="sep">·</span></span>`
+  ).join('');
+  marquee.innerHTML = html + html;
 </script>
 </body>
 </html>
